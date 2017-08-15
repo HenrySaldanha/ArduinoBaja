@@ -32,7 +32,7 @@ void loop() {
 void velocimetro(){
   // diferenca de tempo entre os furos em milisegundos
    unsigned long tempo = diferencaTempoSensorIndutivo();
-   int vel = ((tempo/1000.0)*1.89)*3.6;
+   int vel = ((1/((tempo/1000.0)*6))*1.89)*3.6;
    displayDuplo(vel);
 }
 
@@ -85,6 +85,7 @@ void numeroDisplay(char *vetor, int k) {
   */
   
   switch (k) {
+   
     case 0:
       vetor[0] = 1;
       vetor[1] = 1;
@@ -92,7 +93,7 @@ void numeroDisplay(char *vetor, int k) {
       vetor[3] = 1;
       vetor[4] = 1;
       vetor[5] = 1;
-      vetor[6] = 0;
+      vetor[6] = 0;   
       break;
 
     case 1:
