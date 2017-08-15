@@ -1,11 +1,15 @@
 #include <Wire.h>
-#define sensor_indutivo  11
 
+// DECLARACAO DOS PINOS
+char sensor_indutivo = 11;
+
+/* a,b,c,d,e,f,g*/
 char display1[] = {2, 3, 4, 5, 6, 7, 8};
 char display2[] = {52, 50, 48, 46, 44, 42, 40};
-/* a,b,c,d,e,f,g*/
 
-unsigned long tempoAnt, tempoAtual;
+//---------------------------
+
+
 
 void setup() {
   /* declaracao dos pinos que serao usados, (entrada ou saida de dados)
@@ -57,6 +61,7 @@ void displayDuplo(int n) {
 
 
 unsigned long diferencaTempoSensorIndutivo () {
+  unsigned long tempoAnt, tempoAtual;
   /*
   pega a diferenca de tempo entre os furos
   */
