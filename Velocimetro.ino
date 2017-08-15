@@ -12,9 +12,7 @@ char display2[] = {52, 50, 48, 46, 44, 42, 40};
 
 
 void setup() {
-  /* declaracao dos pinos que serao usados, (entrada ou saida de dados)
-  */
-
+  /* declaracao dos pinos que serao usados, (entrada ou saida de dados)*/
   //monitor serial do PC
   Serial.begin(9600);
   // sensor indutivo
@@ -28,16 +26,14 @@ void setup() {
 }
 
 void loop() {
-   // diferenca de tempo entre os furos em milisegundos
-   unsigned long tempo = diferencaTempoSensorIndutivo();
-   int vel = velocidade(tempo);
-   displayDuplo(vel);
+   velocimetro();
 }
 
-
-int velocidade(unsigned long tempo){
-  // formula da velocidade
-  return ((tempo/1000.0)*1.89)*3.6;
+void velocimetro(){
+  // diferenca de tempo entre os furos em milisegundos
+   unsigned long tempo = diferencaTempoSensorIndutivo();
+   int vel = ((tempo/1000.0)*1.89)*3.6;
+   displayDuplo(vel);
 }
 
 void displayDuplo(int n) {
