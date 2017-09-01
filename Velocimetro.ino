@@ -1,16 +1,13 @@
 #include <Wire.h>
 
 // DECLARACAO DOS PINOS
-char sensor_indutivo = 11;
+char sensor_indutivo = 39;
 
 /* a,b,c,d,e,f,g*/
-char display1[] = {44, 46, 49, 51 , 53, 40, 42};
+char display1[] = {44, 46, 51, 49 , 53, 40, 42};
 char display2[] = {50, 52 ,41, 45, 47, 48, 43};
 
 //---------------------------
-
-
-
 void setup() {
   /* declaracao dos pinos que serao usados, (entrada ou saida de dados)*/
   //monitor serial do PC
@@ -23,16 +20,19 @@ void setup() {
     pinMode(display2[i], OUTPUT);
     pinMode(display1[i], OUTPUT);
   }
+
+  displayDuplo(0);
+  delay(1000);
 }
 
-void loop() {
-   velocimetro();
+void loop() {  
+  velocimetro();  
 }
 
 void velocimetro(){
   // diferenca de tempo entre os furos em milisegundos
    unsigned long tempo = diferencaTempoSensorIndutivo();
-   int vel = ((1/((tempo/1000.0)*6))*1.89)*3.6;
+   int vel = ((1/((tempo/1000.0)*1))*1.89)*3.6;
    displayDuplo(vel);
 }
 
@@ -85,7 +85,6 @@ void numeroDisplay(char *vetor, int k) {
   */
   
   switch (k) {
-   
     case 0:
       vetor[0] = 1;
       vetor[1] = 1;
