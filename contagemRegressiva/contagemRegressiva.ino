@@ -4,9 +4,11 @@
 #define CLK 9 //Set the CLK pin connection to the display
 #define DIO 8 //Set the DIO pin connection to the display
 
-#define UP 10  // BOTAO INCREMENTAR
-#define DOWN 11  // BOTAO DECREMENTAR
+#define UP_H 10  // BOTAO INCREMENTAR
+#define UP_M 11  // BOTAO DECREMENTAR
 #define START 12 // START
+
+int temp = 0;
 
 int numeroFinal = 0;  // tempo final
 boolean start = false;
@@ -15,8 +17,8 @@ TM1637Display display(CLK, DIO);  //configuracao do display
 
 void setup()
 {
-  pinMode(UP, INPUT);
-  pinMode(DOWN, INPUT);
+  pinMode(UP_H, INPUT);
+  pinMode(UP_M, INPUT);
   pinMode(START, INPUT);
   
   display.setBrightness(0x0b);  //brilho maximo
@@ -26,9 +28,14 @@ void setup()
 }
 
 void tempoT(){
+  
   if(start && numeroFinal>0){
-      numeroFinal--;
-      numeroFinal = justeHoras(numeroFinal,2);
+      temp++;
+      if(temp == 60){
+        numeroFinal--;
+        numeroFinal = justeHoras(numeroFinal,2);
+        temp = 0;
+      }
   }
 }
 
@@ -45,20 +52,20 @@ void temporizador(){
     }
 
     // INCREMENTA VALOR DE TEMPO
-    if(digitalRead(UP) == 1){
+    if(digitalRead(UP_H) == 1){
       if(numeroFinal <9999){
-          numeroFinal++;  
+          numeroFinal += 100;  
           numeroFinal = justeHoras(numeroFinal,1);
-          while(digitalRead(UP) == 1);
+          while(digitalRead(UP_H) == 1);
       }
     }
 
     // DECREMENTAC VALOR DE TEMPO
-    if(digitalRead(DOWN) == 1){
+    if(digitalRead(UP_M) == 1){
       if(numeroFinal >0){
-          numeroFinal--;  
-          numeroFinal = justeHoras(numeroFinal,2);
-          while(digitalRead(DOWN) == 1);
+          numeroFinal++;  
+          numeroFinal = justeHoras(numeroFinal,1);
+          while(digitalRead(UP_M) == 1);
       }
     }
     display.showNumberDec(numeroFinal); //Display the Variable value;
@@ -93,6 +100,9 @@ void temporizador(){
       }
       return minutos;
  }
+
+
+
 
 
 
