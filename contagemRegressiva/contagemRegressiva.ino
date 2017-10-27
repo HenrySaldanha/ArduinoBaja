@@ -12,6 +12,8 @@ int temp = 0;
 
 int numeroFinal = 0;  // tempo final
 boolean start = false;
+boolean pontos = false;
+int reset = 0;
 
 TM1637Display display(CLK, DIO);  //configuracao do display
 
@@ -23,23 +25,39 @@ void setup()
   
   display.setBrightness(0x0b);  //brilho maximo
 
-    Timer1.initialize(1 * 1000000);  // a cada 1 segundos
-    Timer1.attachInterrupt(tempoT);  
+  Timer1.initialize(125000);  // a cada 125ms
+  Timer1.attachInterrupt(tempoT);  
 }
 
 void tempoT(){
   
   if(start && numeroFinal>0){
       temp++;
-      if(temp == 60){
+      if(temp == 8*60){ // 125ms x 8 x 60 = 1s
         numeroFinal--;
         numeroFinal = justeHoras(numeroFinal,2);
         temp = 0;
+        
+        if(reset == 8) numeroFinal = 0;
       }
   }
+
+  if(numeroFinal>0){
+      if(digitalRead(START) == 1)
+        reset++;
+      else 
+        reset = 0;
+
+      if(reset == 8){
+          numeroFinal = 0;
+          reset = 0;
+          start = false;
+      }
+  }
+
+  pontos = !pontos;
+      
 }
-
-
 void loop()
 {
   temporizador();
@@ -53,7 +71,7 @@ void temporizador(){
 
     // INCREMENTA VALOR DE TEMPO
     if(digitalRead(UP_H) == 1){
-      if(numeroFinal <9999){
+      if(numeroFinal <9900){
           numeroFinal += 100;  
           numeroFinal = justeHoras(numeroFinal,1);
           while(digitalRead(UP_H) == 1);
@@ -62,14 +80,27 @@ void temporizador(){
 
     // DECREMENTAC VALOR DE TEMPO
     if(digitalRead(UP_M) == 1){
-      if(numeroFinal >0){
+      if(numeroFinal <9999){
           numeroFinal++;  
           numeroFinal = justeHoras(numeroFinal,1);
           while(digitalRead(UP_M) == 1);
       }
     }
-    display.showNumberDec(numeroFinal); //Display the Variable value;
+
+  mostrarValorDisplay();
 }
+
+void mostrarValorDisplay(){
+
+    if(pontos){
+        display.showNumberDec(numeroFinal,true); //Display the Variable value;
+    }else if(!pontos && start){
+        uint8_t  segto = 0x80 | display.encodeDigit ((numeroFinal/ 100) % 10);
+        display.setSegments (&segto, 1, 1);
+    }
+  
+}
+
 
  int justeHoras(int minutos,int upDown){
       if(upDown == 1){
@@ -84,6 +115,16 @@ void temporizador(){
           else if(minutos == 860)return 900;
           else if(minutos == 960)return 1000;
           else if(minutos == 1060)return 1100;
+          else if(minutos == 1160)return 1200;
+          else if(minutos == 1260)return 1300;
+          else if(minutos == 1360)return 1400;
+          else if(minutos == 1460)return 1500;
+          else if(minutos == 1560)return 1600;
+          else if(minutos == 1660)return 1700;
+          else if(minutos == 1760)return 1800;
+          else if(minutos == 1860)return 1900;
+          else if(minutos == 1960)return 2000;
+          
       }
       if(upDown == 2){
           if(minutos == 99)return 59;
@@ -97,14 +138,16 @@ void temporizador(){
           else if(minutos == 860)return 900;
           else if(minutos == 960)return 1000;
           else if(minutos == 1060)return 1100;
+          else if(minutos == 1160)return 1200;
+          else if(minutos == 1260)return 1300;
+          else if(minutos == 1360)return 1400;
+          else if(minutos == 1460)return 1500;
+          else if(minutos == 1560)return 1600;
+          else if(minutos == 1660)return 1700;
+          else if(minutos == 1760)return 1800;
+          else if(minutos == 1860)return 1900;
+          else if(minutos == 1960)return 2000;
+          
       }
       return minutos;
  }
-
-
-
-
-
-
-
-
