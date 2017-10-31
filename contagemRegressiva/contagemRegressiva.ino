@@ -4,8 +4,8 @@
 #define CLK 9 //Set the CLK pin connection to the display
 #define DIO 8 //Set the DIO pin connection to the display
 
-#define UP_H 10  // BOTAO INCREMENTAR
-#define UP_M 11  // BOTAO DECREMENTAR
+#define UP_H 10  // BOTAO INCREMENTAR HORA
+#define UP_M 11  // BOTAO INCREMENTAR MINUTO
 #define START 12 // START
 
 int temp = 0;
