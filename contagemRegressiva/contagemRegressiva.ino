@@ -1,12 +1,12 @@
 #include "TM1637.h"
 #include "TimerOne.h"  
 
-#define CLK 9 //Set the CLK pin connection to the display
-#define DIO 8 //Set the DIO pin connection to the display
+int CLK = 9; //Set the CLK pin connection to the display
+int DIO = 8; //Set the DIO pin connection to the display
 
-#define UP_H 10  // BOTAO INCREMENTAR HORA
-#define UP_M 11  // BOTAO INCREMENTAR MINUTO
-#define START 12 // START
+int UP_H = 5;  // BOTAO INCREMENTAR HORA
+int UP_M = 6;  // BOTAO INCREMENTAR MINUTO
+int START = 7; // START
 
 int temp = 0;
 
@@ -14,6 +14,11 @@ int numeroFinal = 0;  // tempo final
 boolean start = false;
 boolean pontos = false;
 int reset = 0;
+
+int verificacaoHora = 0;
+int verificacaoMinuto = 0;
+int verificacaoStart = 0;
+
 
 TM1637Display display(CLK, DIO);  //configuracao do display
 
@@ -27,6 +32,9 @@ void setup()
 
   Timer1.initialize(125000);  // a cada 125ms
   Timer1.attachInterrupt(tempoT);  
+
+  Serial.begin(9600);
+
 }
 
 void tempoT(){
@@ -56,7 +64,8 @@ void tempoT(){
   }
 
   pontos = !pontos;
-      
+
+  mostrarValorDisplay();
 }
 void loop()
 {
@@ -64,30 +73,41 @@ void loop()
 }
 
 void temporizador(){
-    if(digitalRead(START) == 1){
+    
+    if(digitalRead(UP_H) == 0 && verificacaoHora==1){
+      verificacaoHora = 0;
+    }
+    if(digitalRead(UP_M) == 0 && verificacaoMinuto ==1){
+      verificacaoMinuto = 0;
+    }
+    if(digitalRead(START) == 0 && verificacaoStart ==1){
+      verificacaoMinuto = 0;
+    }
+  
+    if(digitalRead(START) == 1 && verificacaoStart==0){
       start = !start;
-      while(digitalRead(START) == 1);
+      verificacaoStart = 1;
     }
 
     // INCREMENTA VALOR DE TEMPO
-    if(digitalRead(UP_H) == 1){
+    if(digitalRead(UP_H) == 1 && verificacaoHora == 0){
       if(numeroFinal <9900){
           numeroFinal += 100;  
           numeroFinal = justeHoras(numeroFinal,1);
-          while(digitalRead(UP_H) == 1);
+          verificacaoHora= 1;
       }
     }
 
     // DECREMENTAC VALOR DE TEMPO
-    if(digitalRead(UP_M) == 1){
+    if(digitalRead(UP_M) == 1 && verificacaoMinuto == 0){
       if(numeroFinal <9999){
           numeroFinal++;  
           numeroFinal = justeHoras(numeroFinal,1);
-          while(digitalRead(UP_M) == 1);
+          verificacaoMinuto = 1;
       }
     }
 
-  mostrarValorDisplay();
+
 }
 
 void mostrarValorDisplay(){
