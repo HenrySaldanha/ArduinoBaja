@@ -78,6 +78,8 @@ void displayDuplo(int n) {
 
 void tempoT(){
 
+  if(numeroFinal == 0) start = false;
+
   if(numeroFinal>0){
 
       // se ficar pressionado por 1 segund
@@ -118,20 +120,16 @@ void velocimetro(){
 
   s++;
   if(s == 8){
-    //float freq = (picos/12.0)*0.125;
-    float freq = (picos/1);
-    //float w = 2 * 3.1415 * freq;
-  
-    //velocidade = w*0.3*3.6;
+    float freq = (picos/1); 
+    //velocidade = (1.89*freq*3.6)/12.0;
+    velocidade = (1.89*(freq/12.0)*3.6);
+    Serial.println(picos);
     
-    velocidade = (1.89*freq*3.6)/12.0;
-    
-    Serial.println(velocidade);
-  
     picos = 0;
     s = 0;
-
-    displayDuplo(((int)velocidade));
+    if(velocidade <50.0)
+      displayDuplo(((int)velocidade));
+      
   }
   
 }
@@ -140,27 +138,24 @@ void velocimetro(){
 
 void loop()
 {
-  temporizador();
-  lerVelocidade();
-
-  delay(50);
+  if(!start)
+    temporizador();
+  
+  for(int i=0;i<20;i++)
+    lerVelocidade();
 }
 
 void lerVelocidade(){
 
-  if(analogRead(0) <10 && verificacaoVelocimetro == 1 ){
+  if(analogRead(0) <50 && verificacaoVelocimetro == 1 ){
   verificacaoVelocimetro = 0;
     
   }
-
-  if(analogRead(0)> 500 && verificacaoVelocimetro == 0){
+  if(analogRead(0)> 400 && verificacaoVelocimetro == 0){
     picos++;
     verificacaoVelocimetro = 1;
   }
 
-  //Serial.println(analogRead(0));
-
-  
 }
 
 
